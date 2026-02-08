@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyWind // ZEPHYR ENGINE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #ffffff; --sidebar: #ffffff; --text: #000000; --muted: #64748b; --accent: #3b82f6; --border: #f1f5f9; }
+        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+        /* Sidebar Filter Style */
+        .filter-group { border-bottom: 1px solid var(--border); padding: 20px 0; }
+        .filter-title { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .filter-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; color: #475569; }
+        .filter-item:hover { background: #f8fafc; color: var(--text); }
+        .filter-item.active { background: #eff6ff; color: var(--accent); }
+        .check-box { width: 18px; height: 18px; border: 2px solid #e2e8f0; border-radius: 6px; transition: 0.2s; position: relative; }
+        .active .check-box { background: var(--accent); border-color: var(--accent); }
+        .active .check-box::after { content: '✓'; position: absolute; color: white; font-size: 10px; left: 3px; top: 0px; }
+
+        /* Modern Search */
+        .search-wrapper { position: relative; width: 400px; }
+        #global-search { width: 100%; background: #f8fafc; border: 1px solid var(--border); padding: 12px 20px 12px 45px; border-radius: 14px; font-size: 14px; font-weight: 600; outline: none; transition: 0.3s; }
+        #global-search:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 4px rgba(59,130,246,0.05); }
+
+        /* MOD CARD SYSTEM - IMPROVED */
+        .mod-card { background: white; border: 1px solid var(--border); border-radius: 24px; overflow: hidden; transition: 0.4s; cursor: pointer; display: flex; flex-direction: column; height: 100%; }
+        .mod-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05); }
+        
+        .banner-area { height: 160px; position: relative; background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); transition: 0.3s; }
+        .banner-img { width: 100%; height: 100%; object-fit: cover; }
+        .card-logo { position: absolute; bottom: 12px; left: 16px; width: 50px; height: 50px; border-radius: 12px; background: white; padding: 3px; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s; }
+
+        /* No-Banner State for Mods & Plugins */
+        .no-banner .banner-area { height: 60px; background: transparent !important; }
+        .no-banner .card-logo { bottom: -20px; left: 20px; width: 56px; height: 56px; border: 1px solid var(--border); box-shadow: 0 8px 16px rgba(0,0,0,0.08); }
+
+        /* Full Screen Detail */
+        #detail-panel { position: fixed; inset: 0; background: white; z-index: 2000; display: none; padding: 60px; overflow-y: auto; }
+        #detail-panel.active { display: block; animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slideIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .nav-tab { padding: 10px 20px; border-radius: 12px; font-weight: 700; font-size: 12px; color: var(--muted); transition: 0.2s; }
+        .nav-tab.active { background: #000; color: #fff; }
+    </style>
+</head>
+<body>
+
+<header class="h-24 px-12 border-b border-slate-50 sticky top-0 bg-white/90 backdrop-blur-xl z-[100] flex items-center justify-between">
+    <div class="flex items-center gap-12">
+        <div class="flex items-center gap-4">
+            <img src="zephyrlogo.png" alt="Z" class="w-10 h-10" onerror="this.src='https://via.placeholder.com/40/3b82f6/fff?text=Z'">
+            <div class="flex flex-col">
+                <h1 class="text-xl font-black tracking-tighter uppercase leading-none">Zephyr<span class="text-blue-500">.Engine</span></h1>
+                <span class="text-[8px] font-bold text-slate-400 tracking-[3px] uppercase mt-1">Authorized: Levxys</span>
+            </div>
+        </div>
+        <nav class="flex gap-1" id="type-nav">
+            <button class="nav-tab active" data-type="mod">MODS</button>
+            <button class="nav-tab" data-type="plugin">PLUGINS</button>
+            <button class="nav-tab" data-type="resourcepack">RESOURCE PACKS</button>
+            <button class="nav-tab" data-type="shader">SHADER PACKS</button>
+            <button class="nav-tab" data-type="modpack">MODPACKS</button>
+            <button class="nav-tab" data-type="datapack">DATA PACKS</button>
+        </nav>
+    </div>
+    <div class="flex items-center gap-4">
+        <div class="search-wrapper">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 opacity-30">🔍</span>
+            <input type="text" id="global-search" placeholder="Search SkyWind Assets...">
+        </div>
+        <button onclick="toggleSettings()" class="p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition">⚙️</button>
+    </div>
+</header>
+
+<div class="max-w-[1900px] mx-auto flex">
+    <aside class="w-80 p-8 shrink-0 border-r border-slate-50 h-[calc(100vh-96px)] sticky top-24 overflow-y-auto">
+        <div id="filter-container"></div>
+        <div class="mt-8 p-4 bg-slate-50 rounded-2xl flex items-center justify-between">
+            <button onclick="navPage(-1)" class="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm font-bold">←</button>
+            <span id="page-display" class="text-[10px] font-black uppercase">Page 1</span>
+            <button onclick="navPage(1)" class="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm font-bold">→</button>
+        </div>
+    </aside>
+
+    <main id="mod-grid" class="flex-1 p-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"></main>
+</div>
+
+<div id="detail-panel">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex justify-between items-center mb-12">
+            <button onclick="closePanel()" class="text-xs font-black opacity-30 hover:opacity-100 tracking-[3px]">✕ CLOSE TERMINAL</button>
+            <div class="flex gap-2">
+                <button onclick="setDetailTab('desc')" class="nav-tab active" id="tab-desc">DESCRIPTION</button>
+                <button onclick="setDetailTab('gal')" class="nav-tab" id="tab-gal">GALLERY</button>
+                <button onclick="setDetailTab('chan')" class="nav-tab" id="tab-chan">CHANGELOG</button>
+                <button onclick="setDetailTab('vers')" class="nav-tab" id="tab-vers">VERSIONS</button>
+            </div>
+        </div>
+        <div id="detail-body"></div>
+    </div>
+</div>
+
+<script>
+    const allVersions = [
+        "1.21.12", "1.21.11", "1.21.10", "1.21.9", "1.21.8", "1.21.7", "1.21.6", "1.21.5", "1.21.4", "1.21.3", "1.21.2", "1.21.1", "1.21", 
+        "1.20.6", "1.20.5", "1.20.4", "1.20.3", "1.20.2", "1.20.1", "1.20",
+        "1.19.4", "1.19.3", "1.19.2", "1.19.1", "1.19",
+        "1.18.2", "1.18.1", "1.18",
+        "1.17.1", "1.17",
+        "1.16.5", "1.16.4", "1.16.3", "1.16.2", "1.16.1", "1.16",
+        "1.15.2", "1.15.1", "1.15",
+        "1.14.4", "1.14.3", "1.14.2", "1.14.1", "1.14",
+        "1.13.2", "1.13.1", "1.13",
+        "1.12.2", "1.12.1", "1.12",
+        "1.11.2", "1.11.1", "1.11",
+        "1.10.2", "1.10.1", "1.10",
+        "1.9.4", "1.9.3", "1.9.2", "1.9.1", "1.9",
+        "1.8.9", "1.8.8", "1.8.7", "1.8.6", "1.8.5", "1.8.4", "1.8.3", "1.8.2", "1.8.1", "1.8",
+        "1.7.10", "1.7.9", "1.7.8", "1.7.7", "1.7.6", "1.7.5", "1.7.4", "1.7.3", "1.7.2",
+        "1.6.4", "1.6.2", "1.6.1",
+        "1.5.2", "1.5.1",
+        "1.4.7", "1.4.6", "1.4.5", "1.4.4", "1.4.2",
+        "1.3.2", "1.3.1",
+        "1.2.5", "1.2.4", "1.2.3", "1.2.2", "1.2.1",
+        "1.1", "1.0"
+    ];
+    let currentType = 'mod', currentOffset = 0, activeProject = null, selectedFilters = {};
+    let allLoaders = ["Fabric", "Forge", "NeoForge", "Babric", "BTA (Babric)", "Java Agent", "Legacy Fabric", "LiteLoader", "Risugami's ModLoader", "NilLoader", "Ornithe", "Quilt", "Rift"];
+
+    const filterConfig = {
+        mod: { categories: ["Adventure","Cursed","Decoration","Economy","Equipment","Food","Game Mechanics","Library","Magic","Management","Minigame","Mobs","Optimization","Social","Storage","Technology","Transportation","Utility","World Generation"], loaders: ["Fabric","Forge","NeoForge"], environments: ["Client","Server"] },
+        resourcepack: { categories: ["Combat","Cursed","Decoration","Modded","Realistic","Simplistic","Themed","Tweaks","Utility","Vanilla Like"], resolutions: ["16x","32x","64x","128x","256x"] },
+        shader: { categories: ["Cartoon","Cursed","Fantasy","Realistic","Semi Realistic","Vanilla Like"], loaders: ["Iris","OptiFine"] }
+    };
+
+    function renderFilters() {
+        const container = document.getElementById('filter-container');
+        const config = filterConfig[currentType] || filterConfig.mod;
+        let html = `<div class="filter-group"><div class="filter-title">SORT BY</div><div class="filter-item active">Relevance</div><div class="filter-item">Most Downloaded</div><div class="filter-item">Newest</div></div>
+                    <div class="filter-group"><div class="filter-title">GAME VERSION</div><div class="max-h-48 overflow-y-auto pr-2">${allVersions.map(v => `<div class="filter-item" onclick="toggleFilter('versions', '${v}', this)"><div class="check-box"></div>${v}</div>`).join('')}</div></div>
+                    <div class="filter-group"><div class="filter-title">LOADERS</div><div class="max-h-48 overflow-y-auto pr-2">${allLoaders.map(l => `<div class="filter-item" onclick="toggleFilter('loaders', '${l.toLowerCase()}', this)"><div class="check-box"></div>${l}</div>`).join('')}</div></div>`;
+        Object.keys(config).forEach(key => { if (key !== 'loaders') html += `<div class="filter-group"><div class="filter-title">${key.toUpperCase()}</div><div class="space-y-1">${config[key].map(f => `<div class="filter-item" onclick="toggleFilter('${key}', '${f.toLowerCase()}', this)"><div class="check-box"></div>${f}</div>`).join('')}</div></div>`; });
+        container.innerHTML = html;
+    }
+
+    async function fetchData() {
+        const grid = document.getElementById('mod-grid');
+        grid.innerHTML = '<div class="col-span-full py-40 text-center opacity-10 text-4xl font-black animate-pulse uppercase tracking-[10px]">Syncing Core...</div>';
+        const search = document.getElementById('global-search').value;
+        const facets = [["project_type:" + currentType]];
+        if(selectedFilters.versions) facets.push(selectedFilters.versions.map(v => "versions:" + v));
+        if(selectedFilters.loaders) facets.push(selectedFilters.loaders.map(l => "loaders:" + l));
+
+        const isMinimal = (currentType === 'mod' || currentType === 'plugin');
+        const url = `https://api.modrinth.com/v2/search?query=${search}&facets=${encodeURIComponent(JSON.stringify(facets))}&limit=12&offset=${currentOffset}`;
+
+        try {
+            const data = await fetch(url).then(r => r.json());
+            grid.innerHTML = data.hits.map(m => `
+                <div class="mod-card ${isMinimal ? 'no-banner' : ''}" onclick="openDetail('${m.project_id}')">
+                    <div class="banner-area">
+                        ${!isMinimal ? `<img src="${m.gallery?.[0] || 'https://via.placeholder.com/400x200?text=Zephyr'}" class="banner-img">` : ''}
+                        <img src="${m.icon_url}" class="card-logo" onerror="this.src='https://via.placeholder.com/50'">
+                    </div>
+                    <div class="p-6 ${isMinimal ? 'pt-12' : 'pt-10'} flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-extrabold tracking-tight line-clamp-1">${m.title}</h3>
+                            <span class="text-[10px] font-black opacity-40">👁 ${Math.floor(m.downloads * 1.7).toLocaleString()}</span>
+                        </div>
+                        <p class="text-slate-400 text-xs font-semibold leading-relaxed mb-6 line-clamp-2 h-8">
+                            ${m.description}
+                        </p>
+                        <div class="mt-auto flex items-center justify-between pt-4 border-t border-slate-50">
+                            <div class="flex flex-col">
+                                <span class="text-[8px] font-black opacity-20 uppercase">Downloads</span>
+                                <span class="text-[11px] font-black italic">⬇ ${m.downloads.toLocaleString()}</span>
+                            </div>
+                            <span class="bg-blue-50 text-blue-600 text-[9px] font-black px-3 py-1.5 rounded-lg uppercase">${m.latest_version}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } catch(e) { grid.innerHTML = 'Error fetching data.'; }
+    }
+
+    async function fetchProjectVersions(projectId) {
+        try {
+            const versions = await fetch(`https://api.modrinth.com/v2/project/${projectId}/version`).then(r => r.json());
+            const uniqueVersions = []; const versionSet = new Set();
+            versions.forEach(v => { v.game_versions.forEach(gv => { if (!versionSet.has(gv)) { versionSet.add(gv); uniqueVersions.push(gv); } }); });
+            return uniqueVersions.sort((a, b) => b.localeCompare(a, undefined, {numeric: true, sensitivity: 'base'}));
+        } catch(e) { return allVersions; }
+    }
+
+    async function fetchProjectLoaders(projectId) {
+        try {
+            const versions = await fetch(`https://api.modrinth.com/v2/project/${projectId}/version`).then(r => r.json());
+            const uniqueLoaders = []; const loaderSet = new Set();
+            versions.forEach(v => { v.loaders.forEach(loader => { if (!loaderSet.has(loader)) { loaderSet.add(loader); uniqueLoaders.push(loader); } }); });
+            return uniqueLoaders.sort();
+        } catch(e) { return ["Fabric", "Forge"]; }
+    }
+
+    async function openDetail(id) {
+        document.getElementById('detail-panel').classList.add('active');
+        document.body.style.overflow = 'hidden';
+        const [p, v] = await Promise.all([
+            fetch(`https://api.modrinth.com/v2/project/${id}`).then(r => r.json()),
+            fetch(`https://api.modrinth.com/v2/project/${id}/version`).then(r => r.json())
+        ]);
+        activeProject = { p, v, projectVersions: await fetchProjectVersions(id), projectLoaders: await fetchProjectLoaders(id) };
+        setDetailTab('desc');
+    }
+
+    function setDetailTab(tab) {
+        const body = document.getElementById('detail-body');
+        document.querySelectorAll('#detail-panel .nav-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.add('active');
+        const { p, v, projectVersions, projectLoaders } = activeProject;
+
+        if(tab === 'desc') {
+            body.innerHTML = `<div class="flex gap-16"><div class="flex-1">
+                <div class="flex items-center gap-8 mb-12"><img src="${p.icon_url}" class="w-32 h-32 rounded-[32px] shadow-2xl">
+                <div><h2 class="text-5xl font-black tracking-tighter mb-2">${p.title}</h2><p class="text-blue-500 font-bold text-xs uppercase tracking-[3px]">ID: ${p.id}</p></div></div>
+                <div class="prose prose-slate max-w-none text-slate-500 leading-loose">${p.body || p.description}</div></div>
+                <div class="w-80 space-y-8"><div class="bg-slate-50 p-8 rounded-[40px] space-y-6">
+                <h4 class="text-[10px] font-black opacity-30 tracking-widest">DEPLOYMENT</h4>
+                <select class="w-full p-4 rounded-xl bg-white border-none font-bold">${projectVersions.map(ver=>`<option>${ver}</option>`).join('')}</select>
+                <select class="w-full p-4 rounded-xl bg-white border-none font-bold">${projectLoaders.map(l=>`<option>${l}</option>`).join('')}</select>
+                <button class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-sm hover:bg-black transition shadow-xl shadow-blue-100">DOWNLOAD ASSETS</button>
+                </div></div></div>`;
+        } else if(tab === 'gal') {
+            body.innerHTML = `<div class="grid grid-cols-2 gap-8">${p.gallery.map(i => `<img src="${i.url}" class="rounded-[32px] shadow-lg">`).join('')}</div>`;
+        } else if(tab === 'chan') {
+            body.innerHTML = `<div class="space-y-6">${v.slice(0,5).map(ver => `<div class="p-6 bg-slate-50 rounded-2xl"><h3 class="font-black mb-2">${ver.version_number}</h3><div class="text-sm opacity-60">${ver.changelog || 'No changelog provided.'}</div></div>`).join('')}</div>`;
+        } else if(tab === 'vers') {
+            body.innerHTML = `<div class="space-y-3">${v.map(ver => `<div class="p-6 border border-slate-100 rounded-2xl flex justify-between items-center"><div><p class="font-black">${ver.version_number}</p><p class="text-[10px] opacity-30 font-bold uppercase">${ver.game_versions.join(' • ')}</p></div><a href="${ver.files[0].url}" class="w-12 h-12 bg-slate-50 flex items-center justify-center rounded-xl">⬇</a></div>`).join('')}</div>`;
+        }
+    }
+
+    function toggleFilter(type, value, el) {
+        el.classList.toggle('active');
+        if(!selectedFilters[type]) selectedFilters[type] = [];
+        const idx = selectedFilters[type].indexOf(value);
+        if(idx > -1) selectedFilters[type].splice(idx, 1); else selectedFilters[type].push(value);
+        currentOffset = 0; fetchData();
+    }
+
+    function closePanel() { document.getElementById('detail-panel').classList.remove('active'); document.body.style.overflow = 'auto'; }
+    function navPage(d) { currentOffset = Math.max(0, currentOffset + (d * 12)); document.getElementById('page-display').innerText = `Page ${(currentOffset/12)+1}`; fetchData(); }
+
+    document.querySelectorAll('#type-nav button').forEach(b => {
+        b.onclick = () => {
+            document.querySelector('#type-nav button.active').classList.remove('active');
+            b.classList.add('active'); currentType = b.dataset.type;
+            selectedFilters = {}; renderFilters(); fetchData();
+        }
+    });
+
+    document.getElementById('global-search').oninput = () => { clearTimeout(window.sT); window.sT = setTimeout(fetchData, 500); };
+    window.onload = () => { renderFilters(); fetchData(); };
+</script>
+</body>
+</html>
