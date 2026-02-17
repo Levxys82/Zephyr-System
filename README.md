@@ -1,116 +1,29 @@
-# 🌟 Zephyr-System
+# Zephyr-System
 
-> Minecraft eklentileri, modları ve sunucu içeriğini yönetmek için devrim niteliğinde bir platform.
+## Purpose
+The Zephyr-System project is designed to provide a comprehensive solution for managing and integrating various systems through a modular architecture. It aims to streamline workflows and enhance productivity by enabling seamless interactions between different components.
 
-## 📖 Genel Bakış
+## Features
+- **Modular Design:** Each component of the system can be developed and maintained independently.
+- **API Integrations:** The system supports connections with various APIs, allowing for enhanced capabilities and data sharing.
+- **PluginPacks System:** Users can extend system functionality with PluginPacks, which provide additional features and integrations.
+- **User-Friendly Interface:** A straightforward interface that simplifies interaction with different modules and functionalities.
 
-**Zephyr-System**, Minecraft ekosistemini daha verimli ve kullanıcı dostu hale getiren, kapsamlı bir yönetim platformudur. **Modrinth API** ile entegre çalışarak, mevcut platformların (Modrinth, CurseForge, PlanetMinecraft, MCPEDL) yapmadığı yenilikçi çözümler sunmaktadır.
+## Planned Components
+1. **Core Module:** The foundational part of the system.
+2. **Data Management Module:** Handles all data processing and storage.
+3. **User Management Module:** Manages user access and permissions.
+4. **Integration Module:** Facilitates API integrations.
+5. **Plugin Management Module:** Manages the installation and configuration of PluginPacks.
 
-## 🎯 Proje Amacı
+## API Integrations
+- **RESTful APIs:** Support for REST APIs to connect with external services.
+- **Webhooks:** Real-time communication between the Zephyr-system and external applications.
+- **Data Import/Export:** Seamless data transfer capabilities between systems.
 
-Minecraft topluluğu için:
-- ✅ Tek merkezden eklenti, mod ve sunucu içeriği yönetimi
-- ✅ Java ve Bedrock uyumluluğu
-- ✅ Yapay zeka destekli analiz ve çözüm önerileri
-- ✅ Yenilikçi **PluginPacks** sistemi
-- ✅ Sunucu geliştiricileri için hazır araçlar
-
-## 🔧 Planlanan Bileşenler
-
-### 1. **Launcher** 🎮
-Minecraft açan profesyonel bir launcher uygulaması.
-
-### 2. **Agent** 🤖
-Yapay zeka tabanlı eklenti, mod, modpack ve resource pack oluşturma aracı.
-
-### 3. **Plugin Analyzer** 🔍
-Diğer sunucuların içine girip eklentileri tarayan ve analiz eden AI sistemi.
-
-### 4. **Log Analyzer** 📋
-ChatGPT / Gemini API kullanarak sunucu loglarındaki hataları tespit edip çözüm üreten AI.
-
-## 📚 Özellikler
-
-### API Entegrasyonları
-- 🌐 **Modrinth API** - Mod ve modpack yönetimi
-- 🔗 **CurseForge API** - Ek içerik desteği
-- 🌍 **PlanetMinecraft API** - Dünya arama sistemi
-- 🏗️ **MCPEDL API** - Bedrock edition desteği
-
-### Yenilikçi Özellikler
-
-#### 🎁 PluginPacks Sistemi
-Diğer platformların sunmadığı, eklenti paketlerini özelleştirilmiş kategorilerle yönetmek:
-
-**Kategoriler:**
-- Kategoriler (Custom categories)
-- Environments (Server/Client)
-- Sürümler (Versions)
-- Java/Bedrock Desteği
-
-#### 🖥️ Server Environment
-
-1. **Plugins** - Spigot, Paper, Bukkit eklentileri
-2. **Mods** - Forge, Fabric serverside modları
-3. **Resource Packs** - Sunucu resource packleri
-4. **Worlds** - Hazır dünyalar
-5. **Plugin Packs** - Özelleştirilmiş eklenti paketleri
-6. **Skripts** - Denizaltı, Velocity ve diğer skripting dillerinde hazır scriptler
-
-#### 💻 Client Environment
-
-1. **Mods** - Forge, Fabric client modları
-2. **Plugins** - Client eklentileri
-3. **Resource Packs** - Görsel paketler
-4. **Shader Packs** - Grafik şeyderler
-5. **Modpacks** - Tam modpack paketleri
-6. **Data Packs** - Veri paketleri
-7. **Worlds** - Hazır oyun dünyaları
-
-### 🛠️ Sunucu Geliştiricileri için Araçlar
-- Hazır script kütüphanesi
-- Hızlı yapılandırma şablonları
-- Eklenti yönetim arayüzü
-
-## 🎮 Java vs Bedrock
-
-Platform, seçilen sürüme göre otomatik olarak ilgili API'leri etkinleştirir:
-
-- **Java Edition** → Modrinth, PlanetMinecraft, CurseForge API
-- **Bedrock Edition** → MCPEDL API
-
-## 🌐 Teknoloji
-
-- **Dil:** HTML/CSS/JavaScript
-- **API:** Modrinth, CurseForge, PlanetMinecraft, MCPEDL, ChatGPT/Gemini
-- **Yapı:** Website tabanlı platform
-
-## 📋 Yapılacaklar (Roadmap)
-
-- [ ] Website temel tasarımı ve yapısı
-- [ ] Modrinth API entegrasyonu
-- [ ] PluginPacks sistem tasarımı
-- [ ] Log Analyzer (AI) bileşeni
-- [ ] Plugin Analyzer (AI) bileşeni
-- [ ] Agent (AI) bileşeni
-- [ ] Launcher uygulaması
-- [ ] Tam CurseForge entegrasyonu
-- [ ] PlanetMinecraft API entegrasyonu
-- [ ] MCPEDL Bedrock desteği
-- [ ] Sunucu geliştiricileri araç seti
-
-## 📝 Lisans
-
-MIT License - Ayrıntılar için [LICENSE](LICENSE) dosyasını kontrol edin.
-
-## 🤝 Katkıda Bulunma
-
-Bu projeye katkıda bulunmak istersen, lütfen [CONTRIBUTING.md](CONTRIBUTING.md) dosyasını oku.
-
-## 👨‍💻 Geliştirici
-
-**Levxys82** - Proje Kurucusu
+## PluginPacks System
+The PluginPacks system allows users to enhance the functionality of the Zephyr-System. Users can create, share, and install PluginPacks that cater to specific needs, thus fostering a vibrant ecosystem of tools and integrations.
 
 ---
 
-**Zephyr-System** ile Minecraft yönetimini daha akıllı, daha kolay ve daha güçlü hale getirelim! 🚀
+For more information, please refer to the official documentation or contact the project maintainers.
