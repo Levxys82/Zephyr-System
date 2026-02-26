@@ -27,3 +27,13 @@ The PluginPacks system allows users to enhance the functionality of the Zephyr-S
 ---
 
 For more information, please refer to the official documentation or contact the project maintainers.
+## GitHub Pages Deployment
+This repo includes a GitHub Actions workflow that deploys the `dist/` folder to GitHub Pages on every push to `main`.
+
+### One-time setup in GitHub
+1. Go to **Settings → Pages**.
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+3. Push to `main` (or run the workflow manually from **Actions**).
+
+After deployment, your site URL will be:
+- `https://<username>.github.io/Zephyr-System/`
