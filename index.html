@@ -9,17 +9,18 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div id="theme-anim" aria-hidden="true"></div>
 
-<header class="h-24 px-12 border-b border-slate-50 sticky top-0 bg-white/90 backdrop-blur-xl z-[100] flex items-center justify-between">
-    <div class="flex items-center gap-12">
-        <div class="flex items-center gap-4">
+<header class="h-24 px-12 border-b border-slate-50 sticky top-0 z-[100] flex items-center justify-between app-surface">
+    <div class="flex items-center gap-12 min-w-0">
+        <div class="flex items-center gap-4 shrink-0">
             <img src="zephyrlogo.png" alt="Z" class="w-10 h-10 zephyr-logo" onerror="this.src='https://via.placeholder.com/40/3b82f6/fff?text=Z'">
             <div class="flex flex-col">
                 <h1 class="text-xl font-black tracking-tighter uppercase leading-none">Zephyr<span class="text-blue-500">.Engine</span></h1>
                 <span class="text-[8px] font-bold text-slate-400 tracking-[3px] uppercase mt-1">Authorized: Levxys</span>
             </div>
         </div>
-        <nav class="flex gap-1" id="type-nav">
+        <nav class="flex gap-1 overflow-x-auto" id="type-nav">
             <button class="nav-tab active" data-type="mod">MODS</button>
             <button class="nav-tab" data-type="plugin">PLUGINS</button>
             <button class="nav-tab" data-type="resourcepack">RESOURCE PACKS</button>
@@ -31,25 +32,33 @@
             <button class="nav-tab" data-type="skin">SKINS</button>
         </nav>
     </div>
-    <div class="flex items-center gap-4">
+
+    <div class="flex items-center gap-3">
         <div class="search-wrapper">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 opacity-30">🔍</span>
             <input type="text" id="global-search" placeholder="Search SkyWind Assets...">
         </div>
-        <button onclick="toggleSettings()" class="p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition">⚙️</button>
+        <div class="relative">
+            <button onclick="toggleSettings()" class="h-11 px-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition text-xs font-bold">THEME ⚙️</button>
+            <div id="theme-menu" class="theme-menu hidden">
+                <button class="theme-item" data-theme="dark">🌙 Siyah Mod</button>
+                <button class="theme-item" data-theme="light">☀️ Beyaz Mod</button>
+                <button class="theme-item" data-theme="system">💻 Sistem Modu</button>
+            </div>
+        </div>
     </div>
 </header>
 
-<div class="max-w-[1900px] mx-auto flex">
-    <aside class="w-80 p-8 shrink-0 border-r border-slate-50 h-[calc(100vh-96px)] sticky top-24 overflow-y-auto">
+<div class="max-w-[1900px] mx-auto flex min-h-[calc(100vh-96px)]">
+    <aside class="w-80 p-8 shrink-0 border-r border-slate-50 sticky top-24 self-start max-h-[calc(100vh-96px)] overflow-y-auto">
         <div id="filter-container"></div>
     </aside>
 
     <main class="flex-1 p-10 flex flex-col">
         <div class="controls-bar">
             <div class="flex items-center gap-3">
-                <span class="text-[10px] font-black opacity-30">SORT BY:</span>
-                <select class="sort-select" id="sort-select" onchange="currentOffset=0; fetchData()">
+                <span class="text-[10px] font-black opacity-40">SORT BY:</span>
+                <select class="sort-select" id="sort-select">
                     <option value="relevance">Relevance</option>
                     <option value="downloads">Most Downloaded</option>
                     <option value="follows">Most Followed</option>
@@ -61,16 +70,29 @@
                 <span id="total-results">0</span>
                 <span class="opacity-30">ASSETS SYNCED</span>
             </div>
-            <div class="flex items-center gap-4">
-                <button onclick="navPage(-1)" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-100 rounded-xl shadow-sm font-bold hover:bg-slate-50 transition">←</button>
-                <span id="page-display" class="text-[10px] font-black uppercase tracking-widest">Page 1</span>
-                <button onclick="navPage(1)" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-100 rounded-xl shadow-sm font-bold hover:bg-slate-50 transition">→</button>
+            <div class="flex items-center gap-3">
+                <button onclick="navPage(-1)" class="page-btn">←</button>
+                <label class="text-[10px] font-black uppercase opacity-50">Page</label>
+                <input id="page-input" class="page-input" type="number" min="1" value="1">
+                <span id="page-display" class="text-[10px] font-black uppercase tracking-widest">/ 1</span>
+                <button onclick="navPage(1)" class="page-btn">→</button>
             </div>
         </div>
 
         <div id="mod-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"></div>
     </main>
 </div>
+
+<footer class="site-footer">
+    <div class="footer-brand">
+        <img src="zephyrlogo.png" alt="Zephyr Logo" class="w-8 h-8" onerror="this.style.display='none'">
+        <div>
+            <strong>Zephyr.Engine</strong>
+            <p>© <span id="footer-year"></span> SkyWind Assets. Tüm hakları saklıdır.</p>
+        </div>
+    </div>
+    <p class="footer-disclaimer">Bu proje Microsoft/Mojang ile resmi olarak bağlantılı değildir.</p>
+</footer>
 
 <div id="detail-panel">
     <div class="detail-content" id="detail-content-wrapper">
