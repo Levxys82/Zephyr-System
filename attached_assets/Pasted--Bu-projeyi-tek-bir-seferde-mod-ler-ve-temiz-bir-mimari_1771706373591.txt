@@ -1,0 +1,41 @@
+"Bu projeyi tek bir seferde, modüler ve temiz bir mimariyle (Clean Architecture) kurmanı istiyorum. Kapsam büyük olduğu için önce yapıyı kur, sonra detayları işle. İşte teknik gereksinimler:
+
+1. Giriş ve Filtreleme (Landing Section):
+
+Ana sayfada en tepede 'SERVER' ve 'CLIENT' seçimi için devasa, modern butonlar/kartlar olsun.
+
+Server seçilince: (MODS, PLUGINS, RESOURCE PACKS, MODPACKS, DATA PACKS, SKRIPTS) kategorileri aktifleşsin.
+
+Client seçilince: (MODS, RESOURCE PACKS, SHADER PACKS, MODPACKS, DATA PACKS, WORLDS, SKINS) aktifleşsin.
+
+2. Veri Kaynakları ve API (Backend Logic):
+
+İçerikler için Modrinth ve CurseForge API'lerini hibrit şekilde kullan.
+
+WORLDS ve SKINS kategorileri için Planet Minecraft verilerini çekmeye odaklan.
+
+SKRIPTS kategorisi için yerel bir /skripts/database klasörü oluştur. İçinde 'logos' klasörü olsun ve her skript için 'name, version, author, description' içeren bir JSON veritabanı yapısı kur.
+
+3. Modern Tasarım ve İkonografi:
+
+Her kategorinin kendine has ikonu olsun (Fabric -> Fabric logosu, Combat -> Kılıç, Skript -> Kağıt kalem vb.).
+
+Sayfalandırma (Pagination) sistemini < [InputBox] > şeklinde yap; kullanıcı sayfa numarasını yazıp gidebilsin.
+
+Alt kısma (Footer): Logo, Copyright ve 'Microsoft & Mojang ile resmi bağımız yoktur' uyarısını içeren profesyonel bir alan ekle.
+
+4. İndirme (Download) ve Detay Sayfası:
+
+İndirme ekranında 'Sürüm' ve 'Platform' (Forge/Fabric/Quilt) seçicileri ekle.
+
+Kart/Sayfa içeriğinde şu alanları zorunlu tut: Compatibility (Uyumluluk), Mod Links (Direct/Mirror), Creators (Owner/Dev rolleriyle), Details (Publish/Update tarihleri).
+
+5. Gelişmiş Tema Sistemi (Animations):
+
+Ayarlar kısmına Siyah, Beyaz ve Sistem modu ekle.
+
+Siyah Mod: Gece teması, ay doğma animasyonu ve yıldız efektleri.
+
+Beyaz Mod: Gündüz teması, güneş doğma animasyonu ve aydınlık geçiş efekti.
+
+Bu yapıyı oluştururken Tailwind CSS ve Framer Motion kullanarak performansı ve görsel kaliteyi en üstte tut. Hazırsan SkyWind'in vizyonunu (Zephyr) inşa etmeye başla."

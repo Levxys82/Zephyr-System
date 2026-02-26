@@ -1,0 +1,234 @@
+Kategoriler falan çalışmıyor.
+Kategorileri düzelt
+
+Mods için:
+Game version: Tüm sürümler
+
+Loader:
+Ana Yükleyiciler:
+>Fabric
+>Forge
+>NeoForge
+Tüm hepsi:
+>Babric
+>BTA (Babric)
+>Java Agent
+>Legacy Fabric
+>LiteLoader
+>Risugami's ModLoader
+>NilLoader
+>Ornithe
+>Quilt
+>Rift
+
+Category:
+>Adventure
+>Cursed
+>Decoration
+>Economy
+>Equipment
+>Food
+>Game Mechanics
+>Library
+>Magic
+>Management
+>Minigame
+>Mobs
+>Optimization
+>Social
+>Storage
+>Technology
+>Transportation
+>Utility
+>World Generation
+
+Environment:
+>Client
+>Server
+
+
+
+
+
+
+
+Resource Packs için:
+Category:
+>Combat
+>Cursed
+>Decoration
+>Modded
+>Realistic
+>Simplistic
+>Themed
+>Tweaks
+>Utility
+>Vanilla Like
+
+Feature:
+>Audio
+>Blocks
+>Core Shaders
+>Entities
+>Environment
+>Equipment
+>Fonts
+>GUI
+>Items
+>Locale
+
+Resolutions:
+>8x or lower
+>16x
+>32x
+>48x
+>64x
+>128x
+>256x
+>512x or higher
+
+Game version: Tüm sürümler
+
+
+
+
+
+
+
+Data Packs için:
+Category: Mods kategorilerinin aynısı
+Game version: Tüm sürümler
+
+
+
+
+
+
+
+
+Shaders için:
+Category:
+>Cartoon
+>Cursed
+>Fantasy
+>Realistic
+>Semi Realistic
+>Vanilla Like
+
+Feature:
+> Atmosphere
+> Bloom
+> Colored Lighting
+> Foliage
+> Path Tracing
+> PBR
+> Reflections
+> Shadows
+
+Performance impact:
+> Potato
+> Low
+> Medium
+> High
+> Screenshot
+
+Loader:
+> Iris
+> OptiFine
+> Vanilla Shader
+>  Canvas
+
+Game version: Tüm sürümler
+
+
+
+
+
+
+
+Modpacks için:
+Category:
+>Adventure
+>Challenging
+>Combat
+>Kitchen Sink
+>Lightweight
+>Magic
+>Multiplayer
+>Optimization
+>Quests
+>Technology
+
+Environments: Biliyorsun zaten
+
+Game version: Tüm sürümler
+
+Loader:
+>Fabric
+>Forge
+>NeoForge
+>Quilt
+
+
+
+
+
+
+
+Plugins için:
+
+Category:
+>Adventure
+>Cursed
+>Decoration
+>Economy
+>Equipment
+>Food
+>Game Mechanics
+>Library
+>Magic
+>Management
+>Minigame
+>Mobs
+>Optimization
+>Social
+>Storage
+>Technology
+>Transportation
+>Utility
+>World Generation
+
+Game version: Tüm sürümler
+
+Loaders:
+>Bukkit
+>Folia
+>Paper
+>Purpur
+>Spigot
+>Sponge
+
+Platform:
+>BungeeCord
+>Geyser Extension
+>Velocity
+>Waterfall
+
+Sana dediğim yerde bütün saydıklarımı sağa koy. ve doğru şekilde ayarla.
+
+
+
+Ayrıca her seçenek için bir logo koy.
+
+Bunun yanında Sort by, View sayısı ve Page Atlama düğmelerini ortaya (Listenin olduğu yere) ekle
+
+
+Ayrıca herşeyi açıp kapatma (Sort by, Game version, Loaders vs.) seçeneği yap. Birde show more show fewer ekle.
+
+
+Birde bütün herşeye animasyon ekle.
+Özellikle Zephyr ismini temsil eden Rüzgar efektli
+
+Listenin içinde bir şeye tıklayınca ilk önce bulut efekti gelsin sonra mod açılsın. Gecikmeyi örtmek için.
+
+Haydi bismillah! başla!
