@@ -209,15 +209,50 @@ function setDetailTab(tab) {
     const { p, v } = activeProject;
 
     if(tab === 'desc') {
-        body.innerHTML = `<div class="flex gap-16"><div class="flex-1">
-            <div class="flex items-center gap-8 mb-12"><img src="${p.icon_url}" class="w-32 h-32 rounded-[32px] shadow-2xl">
-            <div><h2 class="text-5xl font-black tracking-tighter mb-2">${p.title}</h2><p class="text-blue-500 font-bold text-xs uppercase tracking-[3px]">ID: ${p.id}</p></div></div>
-            <div class="prose prose-slate max-w-none text-slate-500 leading-loose">${p.body || p.description}</div></div>
-            <div class="w-80 space-y-8"><div class="bg-slate-50 p-8 rounded-[40px] space-y-6">
-            <h4 class="text-[10px] font-black opacity-30 tracking-widest uppercase">Deployment</h4>
-            <button class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-sm hover:bg-black transition shadow-xl shadow-blue-100">DOWNLOAD ASSETS</button>
-            </div></div></div>`;
-    } else if(tab === 'gal') {
+        // Tüm benzersiz versiyonları ve loaderları ayıkla
+        const versions = [...new Set(v.flatMap(ver => ver.game_versions))].sort().reverse();
+        const loaders = [...new Set(v.flatMap(ver => ver.loaders))].sort();
+
+        body.innerHTML = `
+            <div class="flex gap-16">
+                <div class="flex-1">
+                    <div class="flex items-center gap-8 mb-12">
+                        <img src="${p.icon_url}" class="w-32 h-32 rounded-[32px] shadow-2xl">
+                        <div>
+                            <h2 class="text-5xl font-black tracking-tighter mb-2">${p.title}</h2>
+                            <p class="text-blue-500 font-bold text-xs uppercase tracking-[3px]">ID: ${p.id}</p>
+                        </div>
+                    </div>
+                    <div class="prose prose-slate max-w-none text-slate-500 leading-loose">${p.body || p.description}</div>
+                </div>
+                <div class="w-80 space-y-8">
+                    <div class="bg-slate-50 p-8 rounded-[40px] space-y-6">
+                        <h4 class="text-[10px] font-black opacity-30 tracking-widest uppercase">Deployment</h4>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-[9px] font-bold opacity-40 ml-2">VERSION</label>
+                                <select id="download-version" class="w-full mt-1 p-4 rounded-2xl bg-white border-none font-bold text-sm shadow-sm outline-none">
+                                    ${versions.map(ver => `<option value="${ver}">${ver}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[9px] font-bold opacity-40 ml-2">LOADER</label>
+                                <select id="download-loader" class="w-full mt-1 p-4 rounded-2xl bg-white border-none font-bold text-sm shadow-sm outline-none">
+                                    ${loaders.map(load => `<option value="${load}">${load}</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>
+
+                        <button onclick="downloadActiveAsset()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-sm hover:bg-black transition shadow-xl shadow-blue-100 active:scale-95">
+                            DOWNLOAD ASSETS
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+    } 
+    // ... diğer tablar (gal, chan, vers) aynı kalabilir
+    else if(tab === 'gal') {
         body.innerHTML = `<div class="grid grid-cols-2 gap-8">${p.gallery.map(i => `<img src="${i.url}" class="rounded-[32px] shadow-lg">`).join('')}</div>`;
     } else if(tab === 'chan') {
         body.innerHTML = `<div class="space-y-6">${v.slice(0,5).map(ver => `<div class="p-6 bg-slate-50 rounded-2xl"><h3 class="font-black mb-2">${ver.version_number}</h3><div class="text-sm opacity-60">${ver.changelog || 'No changelog provided.'}</div></div>`).join('')}</div>`;
@@ -226,11 +261,23 @@ function setDetailTab(tab) {
     }
 }
 
-function toggleFilter(type, value, el) {
-    if(!selectedFilters[type]) selectedFilters[type] = [];
-    const idx = selectedFilters[type].indexOf(value);
-    if(idx > -1) selectedFilters[type].splice(idx, 1); else selectedFilters[type].push(value);
-    renderFilters(); currentOffset = 0; fetchData();
+// İndirme işlemini gerçekleştiren ana fonksiyon
+function downloadActiveAsset() {
+    const selectedVer = document.getElementById('download-version').value;
+    const selectedLoader = document.getElementById('download-loader').value;
+    
+    // Filtreye uyan en güncel sürümü bul
+    const match = activeProject.v.find(ver => 
+        ver.game_versions.includes(selectedVer) && 
+        ver.loaders.includes(selectedLoader.toLowerCase())
+    );
+
+    if (match && match.files && match.files.length > 0) {
+        const fileUrl = match.files[0].url;
+        window.open(fileUrl, '_blank'); // İndirmeyi başlat
+    } else {
+        alert("Aga, bu versiyon ve loader kombinasyonu için uygun dosya bulunamadı! ⚠️");
+    }
 }
 
 function closePanel() { document.getElementById('detail-panel').classList.remove('active'); document.body.style.overflow = 'auto'; }
