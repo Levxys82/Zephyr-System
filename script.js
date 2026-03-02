@@ -147,41 +147,56 @@ async function fetchData() {
     const search = document.getElementById('global-search').value;
     const sort = document.getElementById('sort-select').value;
 
-    const facets = [["project_type:" + currentType]];
+    // Filtreleme Mantığını Onaralım
+    let facets = [`["project_type:${currentType}"]` || `["project_type:mod"]`];
+    
+    // Seçili filtreleri Modrinth'in anladığı formata (Array of Arrays) çeviriyoruz
     Object.keys(selectedFilters).forEach(key => {
-        if (selectedFilters[key].length > 0) {
-            facets.push(selectedFilters[key].map(val => (key === 'versions' ? 'versions:' : 'categories:') + val));
+        if (selectedFilters[key] && selectedFilters[key].length > 0) {
+            const filterStrings = selectedFilters[key].map(val => {
+                const prefix = (key === 'versions') ? 'versions' : 'categories';
+                return `"${prefix}:${val}"`;
+            });
+            facets.push(`[${filterStrings.join(',')}]`);
         }
     });
 
-    const url = `https://api.modrinth.com/v2/search?query=${search}&facets=${encodeURIComponent(JSON.stringify(facets))}&index=${sort}&limit=12&offset=${currentOffset}`;
+    const facetsParam = `[${facets.join(',')}]`;
+    const url = `https://api.modrinth.com/v2/search?query=${search}&facets=${encodeURIComponent(facetsParam)}&index=${sort}&limit=12&offset=${currentOffset}`;
 
     try {
-        const data = await fetch(url).then(r => r.json());
-        document.getElementById('total-results').innerText = data.total_hits.toLocaleString();
-        grid.innerHTML = data.hits.map(m => `
-            <div class="mod-card ${['mod','plugin','datapack'].includes(currentType) ? 'no-banner' : ''}" onclick="openDetail('${m.project_id}')">
-                <div class="banner-area">
-                    ${!['mod','plugin','datapack'].includes(currentType) ? `<img src="${m.gallery?.[0] || 'https://via.placeholder.com/400x200?text=Zephyr'}" class="banner-img">` : ''}
-                    <img src="${m.icon_url}" class="card-logo" onerror="this.src='https://via.placeholder.com/50'">
-                </div>
-                <div class="p-6 flex-1 flex flex-col ${['mod','plugin','datapack'].includes(currentType) ? 'pt-12' : 'pt-10'}">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-lg font-extrabold tracking-tight line-clamp-1">${m.title}</h3>
-                        <span class="text-[10px] font-black opacity-40">👁 ${Math.floor(m.downloads * 1.7).toLocaleString()}</span>
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.hits) {
+            document.getElementById('total-results').innerText = data.total_hits.toLocaleString();
+            grid.innerHTML = data.hits.map(m => `
+                <div class="mod-card ${['mod','plugin','datapack'].includes(currentType) ? 'no-banner' : ''}" onclick="openDetail('${m.project_id}')">
+                    <div class="banner-area">
+                        ${!['mod','plugin','datapack'].includes(currentType) ? `<img src="${m.gallery?.[0] || 'https://via.placeholder.com/400x200?text=Zephyr'}" class="banner-img">` : ''}
+                        <img src="${m.icon_url}" class="card-logo" onerror="this.src='https://via.placeholder.com/50'">
                     </div>
-                    <p class="text-slate-400 text-xs font-semibold leading-relaxed mb-6 line-clamp-2 h-8">${m.description}</p>
-                    <div class="mt-auto flex items-center justify-between pt-4 border-t border-slate-50">
-                        <div class="flex flex-col">
-                            <span class="text-[8px] font-black opacity-20 uppercase">Downloads</span>
-                            <span class="text-[11px] font-black italic">⬇ ${m.downloads.toLocaleString()}</span>
+                    <div class="p-6 flex-1 flex flex-col ${['mod','plugin','datapack'].includes(currentType) ? 'pt-12' : 'pt-10'}">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-extrabold tracking-tight line-clamp-1">${m.title}</h3>
+                            <span class="text-[10px] font-black opacity-40">👁 ${Math.floor(m.downloads * 1.7).toLocaleString()}</span>
                         </div>
-                        <span class="bg-blue-50 text-blue-600 text-[9px] font-black px-3 py-1.5 rounded-lg uppercase">${m.latest_version || 'v1.0'}</span>
+                        <p class="text-slate-400 text-xs font-semibold leading-relaxed mb-6 line-clamp-2 h-8">${m.description}</p>
+                        <div class="mt-auto flex items-center justify-between pt-4 border-t border-slate-50">
+                            <div class="flex flex-col">
+                                <span class="text-[8px] font-black opacity-20 uppercase">Downloads</span>
+                                <span class="text-[11px] font-black italic">⬇ ${m.downloads.toLocaleString()}</span>
+                            </div>
+                            <span class="bg-blue-50 text-blue-600 text-[9px] font-black px-3 py-1.5 rounded-lg uppercase">${m.latest_version || 'v1.0'}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
-    } catch(e) { grid.innerHTML = 'Error syncing assets.'; }
+            `).join('');
+        }
+    } catch(e) { 
+        console.error("Filter Error:", e);
+        grid.innerHTML = '<div class="col-span-full text-center py-20 font-bold opacity-50">Sync failed. Check terminal logs, Lider.</div>'; 
+    }
 }
 
 async function openDetail(id) {
